@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Sudoku.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Jacoco Configuration Coverage Results</a> &gt; <a href="index.source.html" class="el_package">it.uniba.homework1</a> &gt; <span class="el_source">Sudoku.java</span></div><h1>Sudoku.java</h1><pre class="source lang-java linenums">package it.uniba.homework1;
+
+<span class="fc" id="L3">public class Sudoku {</span>
+
+    public boolean isSafe(char[][] board,int row,int col,int num) {
+
+<span class="fc bfc" id="L7" title="All 2 branches covered.">         if (row &gt;= board.length) {</span>
+<span class="fc" id="L8">            return false;</span>
+        }
+
+<span class="fc bfc" id="L11" title="All 2 branches covered.">        if (col &gt;= board.length) {</span>
+<span class="fc" id="L12">            return false;</span>
+        }
+
+<span class="fc bfc" id="L15" title="All 2 branches covered.">        for(int i=0;i&lt;board.length;i++) {</span>
+<span class="fc bfc" id="L16" title="All 2 branches covered.">            if(board[i][col]==(char)(num+'0')) {</span>
+<span class="fc" id="L17">                return false;</span>
+            }
+        }
+
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        for(int j=0;j&lt;board.length;j++) {</span>
+<span class="fc bfc" id="L22" title="All 2 branches covered.">            if(board[row][j]==(char)(num+'0')) {</span>
+<span class="fc" id="L23">                return false;</span>
+            }
+        }
+
+<span class="fc" id="L27">        int sr = 3*(row/3);</span>
+<span class="fc" id="L28">        int sc = 3*(col/3);</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        for(int i=sr;i&lt;sr+3;i++) {</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">            for(int j=sc;j&lt;sc+3;j++) {</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">                if(board[i][j]==(char)(num+'0')) {</span>
+<span class="fc" id="L32">                    return false;</span>
+                }
+            }
+        }
+<span class="fc" id="L36">        return true;</span>
+
+    }
+
+    public boolean helper(char[][] board,int row,int col) {
+
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if(row==board.length) {</span>
+<span class="fc" id="L43">            return true;</span>
+        }
+<span class="fc" id="L45">        int nrow=0;</span>
+<span class="fc" id="L46">        int ncol=0;</span>
+
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if(col==board.length-1) {</span>
+<span class="fc" id="L49">            nrow = row+1;</span>
+<span class="fc" id="L50">            ncol=0;</span>
+        } else {
+<span class="fc" id="L52">            nrow=row;</span>
+<span class="fc" id="L53">            ncol=col+1;</span>
+        }
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        if(board[row][col]!='.') {</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            if(helper(board,nrow,ncol)) {</span>
+<span class="fc" id="L57">                return true;</span>
+            }
+        }else {
+<span class="fc bfc" id="L60" title="All 2 branches covered.">            for(int i=1;i&lt;=9;i++) {</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">                if(isSafe(board,row,col,i)) {</span>
+<span class="fc" id="L62">                    board[row][col]=(char)(i+'0');</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">                    if(helper(board,nrow,ncol)) {</span>
+<span class="fc" id="L64">                        return true;</span>
+                    }else {
+<span class="fc" id="L66">                        board[row][col]='.';</span>
+                    }
+                }
+            }
+        }
+<span class="fc" id="L71">        return false;</span>
+
+    }
+
+    public void solvesudoku(char[][] board) {
+<span class="fc" id="L76">        helper(board,0,0);</span>
+<span class="fc" id="L77">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

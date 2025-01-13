@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SudokuTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Jacoco Configuration Coverage Results</a> &gt; <a href="index.source.html" class="el_package">it.uniba.homework1</a> &gt; <span class="el_source">SudokuTest.java</span></div><h1>SudokuTest.java</h1><pre class="source lang-java linenums">package it.uniba.homework1;
+
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.MethodOrderer.*;
+import static org.junit.jupiter.params.provider.Arguments.of;
+
+<span class="fc" id="L22">class SudokuTest {</span>
+
+<span class="fc" id="L24">    Sudoku sudoku = new Sudoku();</span>
+
+    @Nested
+    @TestMethodOrder(OrderAnnotation.class)
+    @DisplayName(&quot;Input Program Exploration&quot;)
+<span class="fc" id="L29">    class InputProgramExploration {</span>
+
+        @Test
+        @Order(1)
+        @DisplayName(&quot;isSafe Method Test: Valid Number&quot;)
+        void testIsSafe_ValidNumber() {
+
+<span class="fc" id="L36">            char[][] board = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+
+<span class="fc" id="L48">            assertTrue(sudoku.isSafe(board, 3, 1, 5));</span>
+<span class="fc" id="L49">        }</span>
+
+        @Test
+        @Order(2)
+        @DisplayName(&quot;isSafe Method Test: Invalid Number&quot;)
+        void testIsSafe_InvalidNumber() {
+
+<span class="fc" id="L56">            char[][] board = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+
+<span class="fc" id="L68">            assertFalse(sudoku.isSafe(board, 0, 0, 5));</span>
+<span class="fc" id="L69">        }</span>
+
+        @Test
+        @Order(3)
+        @DisplayName(&quot;isSafe Method Test: Invalid Coordinates Should Throw ArrayIndexOutOfBoundsException&quot;)
+        void testIsSafe_InvalidCoordinates_ThrowsException() {
+
+<span class="fc" id="L76">            char[][] board = new char[2][2];</span>
+<span class="nc" id="L77">            assertThrows(ArrayIndexOutOfBoundsException.class, () -&gt; {</span>
+<span class="fc" id="L78">                sudoku.isSafe(board, 0, 2, 3);</span>
+<span class="fc" id="L79">            });</span>
+<span class="nc" id="L80">        }</span>
+
+        @Test
+        @Order(4)
+        @DisplayName(&quot;Helper Method Test: Valid Board&quot;)
+        void testHelper_SolvableBoard() {
+
+<span class="fc" id="L87">            char[][] board = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+
+<span class="fc" id="L99">            assertTrue(sudoku.helper(board, 0, 0));</span>
+<span class="fc" id="L100">        }</span>
+
+        @Test
+        @Order(5)
+        @DisplayName(&quot;Helper Method Test: Invalid Board&quot;)
+        void testHelper_InsolvableBoard() {
+
+<span class="fc" id="L107">            char[][] board = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '8'}
+            };
+
+<span class="fc" id="L119">            assertFalse(sudoku.helper(board, 0, 0));</span>
+<span class="fc" id="L120">        }</span>
+
+        @Test
+        @Order(6)
+        @DisplayName(&quot;SolveSudoku Method Test: Valid Solution&quot;)
+        void testSolveSudoku_ValidSolution() {
+
+<span class="fc" id="L127">            char[][] board = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+
+<span class="fc" id="L139">            sudoku.solvesudoku(board);</span>
+
+<span class="fc" id="L141">            char[][] expectedBoard = {</span>
+                    {'5', '3', '4', '6', '7', '8', '9', '1', '2'},
+                    {'6', '7', '2', '1', '9', '5', '3', '4', '8'},
+                    {'1', '9', '8', '3', '4', '2', '5', '6', '7'},
+                    {'8', '5', '9', '7', '6', '1', '4', '2', '3'},
+                    {'4', '2', '6', '8', '5', '3', '7', '9', '1'},
+                    {'7', '1', '3', '9', '2', '4', '8', '5', '6'},
+                    {'9', '6', '1', '5', '3', '7', '2', '8', '4'},
+                    {'2', '8', '7', '4', '1', '9', '6', '3', '5'},
+                    {'3', '4', '5', '2', '8', '6', '1', '7', '9'}
+            };
+
+<span class="fc" id="L153">            assertArrayEquals(expectedBoard, board);</span>
+<span class="fc" id="L154">        }</span>
+    }
+
+
+    @Nested
+    @TestMethodOrder(OrderAnnotation.class)
+    @DisplayName(&quot;Boundary Cases&quot;)
+<span class="fc" id="L161">    class IdentifyBoundaryCases {</span>
+
+        @ParameterizedTest
+        @Order(1)
+        @DisplayName(&quot;isSafe Method Test: Boundary Case for row&quot;)
+        @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9})
+        void testIsSafe_BoundaryCaseRow(int row) {
+
+<span class="fc" id="L169">            char[][] board = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+
+<span class="fc" id="L181">            assertDoesNotThrow(() -&gt; {</span>
+<span class="fc" id="L182">                sudoku.isSafe(board, row, 0, 1);</span>
+<span class="fc" id="L183">            });</span>
+
+<span class="fc" id="L185">        }</span>
+
+        @ParameterizedTest
+        @Order(2)
+        @DisplayName(&quot;isSafe Method Test: Boundary Case for col&quot;)
+        @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9})
+        void testIsSafe_BoundaryCaseCol(int col) {
+
+<span class="fc" id="L193">            char[][] board = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+
+<span class="fc" id="L205">            assertDoesNotThrow(() -&gt; {</span>
+<span class="fc" id="L206">                sudoku.isSafe(board, 0, col, 1);</span>
+<span class="fc" id="L207">            });</span>
+<span class="fc" id="L208">        }</span>
+
+        @ParameterizedTest
+        @Order(3)
+        @DisplayName(&quot;Helper Method Test: Boundary Case for row and col&quot;)
+        @MethodSource(&quot;boundaryCaseRowAndCol&quot;)
+        void testHelper_BoundaryCaseRowAndCol(int row, int col) {
+
+<span class="fc" id="L216">            char[][] board = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+
+<span class="fc" id="L228">            assertTrue(sudoku.helper(board, row, col));</span>
+<span class="fc" id="L229">        }</span>
+
+        private static Stream&lt;Object[]&gt; boundaryCaseRowAndCol() {
+
+<span class="fc" id="L233">            return Stream.of(</span>
+<span class="fc" id="L234">                    new Object[]{0, 0},</span>
+<span class="fc" id="L235">                    new Object[]{8, 9},</span>
+<span class="fc" id="L236">                    new Object[]{8, 8},</span>
+<span class="fc" id="L237">                    new Object[]{4, 4},</span>
+<span class="fc" id="L238">                    new Object[]{3, 5},</span>
+<span class="fc" id="L239">                    new Object[]{3, 3},</span>
+<span class="fc" id="L240">                    new Object[]{9, 9},</span>
+<span class="fc" id="L241">                    new Object[]{10, 1},</span>
+<span class="fc" id="L242">                    new Object[]{9, 10}</span>
+            );
+        }
+    }
+
+
+    @Nested
+    @TestMethodOrder(OrderAnnotation.class)
+    @DisplayName(&quot;Devise Test Cases&quot;)
+<span class="fc" id="L251">    class DeviceTestCases {</span>
+
+        // isSafe Method Test NullPointerException
+        @ParameterizedTest
+        @Order(1)
+        @DisplayName(&quot;isSafe Method Test: NullPointerException&quot;)
+        @MethodSource(&quot;testCasesNullPointerExceptionIsSafe&quot;)
+        void shouldThrowNullPointerExceptionIsSafe(char[][] board, int row, int col, int num) {
+<span class="pc" id="L259">            assertThatThrownBy(() -&gt; sudoku.isSafe(board, row, col, num)</span>
+<span class="fc" id="L260">            ).isInstanceOf(NullPointerException.class);</span>
+<span class="fc" id="L261">        }</span>
+        static Stream&lt;Arguments&gt; testCasesNullPointerExceptionIsSafe() {
+<span class="fc" id="L263">            return Stream.of(</span>
+<span class="fc" id="L264">                    of(null, 0, 0, 1)); // T1</span>
+        }
+
+        // isSafe Method Test Correct Result
+        @ParameterizedTest
+        @Order(2)
+        @DisplayName(&quot;isSafe Method Test: Devise Test Cases&quot;)
+        @MethodSource(&quot;testCasesReturnCorrectResultIsSafe&quot;)
+        void shouldReturnCorrectResultIsSafe(char[][] board, int row, int col, int num, boolean expected) {
+<span class="fc" id="L273">            assertThat(sudoku.isSafe(board, row, col, num)).isEqualTo(expected);</span>
+<span class="fc" id="L274">        }</span>
+        static Stream&lt;Arguments&gt; testCasesReturnCorrectResultIsSafe() {
+
+<span class="fc" id="L277">            char[][] emptyBoard = new char[9][9];</span>
+
+<span class="fc" id="L279">            char[][] pointBoard1 = {</span>
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'}
+            };
+
+<span class="fc" id="L291">            char[][] pointBoard2 = {</span>
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '2', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                    {'.', '.', '.', '.', '.', '.', '.', '.', '.'}
+            };
+
+<span class="fc" id="L303">            char[][] solvableBoard = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+
+<span class="fc" id="L315">            char[][] unsolvableBoard = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '6', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '2'},
+                    {'.', '8', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '9', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+
+<span class="fc" id="L327">            char[][] fullBoard = {</span>
+                    {'5', '3', '4', '6', '7', '8', '9', '1', '2'},
+                    {'6', '7', '2', '1', '9', '5', '3', '4', '8'},
+                    {'1', '9', '8', '3', '4', '2', '5', '6', '7'},
+                    {'8', '5', '9', '7', '6', '1', '4', '2', '3'},
+                    {'4', '2', '6', '8', '5', '3', '7', '9', '1'},
+                    {'7', '1', '3', '9', '2', '4', '8', '5', '6'},
+                    {'9', '6', '1', '5', '3', '7', '2', '8', '4'},
+                    {'2', '8', '7', '4', '1', '9', '6', '3', '5'},
+                    {'3', '4', '5', '2', '8', '6', '1', '7', '9'}
+            };
+<span class="fc" id="L338">            return Stream.of(</span>
+<span class="fc" id="L339">                    of(emptyBoard, 0, 0, 1, true), // T2</span>
+<span class="fc" id="L340">                    of(pointBoard1, 2 , 2, 5, true), // T7</span>
+<span class="fc" id="L341">                    of(pointBoard2, 5, 6, 2, false), // T8</span>
+<span class="fc" id="L342">                    of(unsolvableBoard, 4, 2, 5, true), // T9.1</span>
+<span class="fc" id="L343">                    of(unsolvableBoard, 8, 5, 1, true), // T9.2</span>
+<span class="fc" id="L344">                    of(unsolvableBoard,  6, 4, 4, false), // T9.3</span>
+<span class="fc" id="L345">                    of(unsolvableBoard, 2, 1, 3, false), // T10.1</span>
+<span class="fc" id="L346">                    of(unsolvableBoard, 5, 0, 8, false), // T10.2</span>
+<span class="fc" id="L347">                    of(unsolvableBoard, 4, 4, 7, false), // T10.3</span>
+<span class="fc" id="L348">                    of(solvableBoard, 0, 8, 2, true), // T11.1</span>
+<span class="fc" id="L349">                    of(solvableBoard, 3, 2, 1, true), // T11.2</span>
+<span class="fc" id="L350">                    of(solvableBoard, 7, 6, 3, true), // T11.3</span>
+<span class="fc" id="L351">                    of(solvableBoard, 0, 0, 5, false), // T12.1</span>
+<span class="fc" id="L352">                    of(solvableBoard, 3, 4, 9, false), // T12.2</span>
+<span class="fc" id="L353">                    of(solvableBoard, 8, 4, 4, false), // T12.3</span>
+<span class="fc" id="L354">                    of(fullBoard, 2, 6, 5, false), // T13.1</span>
+<span class="fc" id="L355">                    of(fullBoard, 8, 2, 4, false), // T13.2</span>
+<span class="fc" id="L356">                    of(fullBoard, 7, 2, 1, false), // T13.3</span>
+<span class="fc" id="L357">                    of(fullBoard, 5, 3, 8, false), // T14.1</span>
+<span class="fc" id="L358">                    of(fullBoard, 4, 5, 6, false), // T14.2</span>
+<span class="fc" id="L359">                    of(fullBoard, 1, 2, 3, false), // T14.3</span>
+<span class="fc" id="L360">                    of(solvableBoard, 10, 15, 4, false), // T15</span>
+<span class="fc" id="L361">                    of(solvableBoard, 3, 20, 7, false), // T16</span>
+<span class="fc" id="L362">                    of(solvableBoard, 13, 6, 9, false), // T17</span>
+<span class="fc" id="L363">                    of(solvableBoard, 2, 3, 2, true)); // T18</span>
+        }
+
+        // Helper Method Test NullPointerException
+        @ParameterizedTest
+        @Order(3)
+        @DisplayName(&quot;Helper Method Test: NullPointerException&quot;)
+        @MethodSource(&quot;testCasesNullPointerExceptionHelper&quot;)
+        void shouldThrowNullPointerExceptionHelper(char[][] board, int row, int col) {
+<span class="pc" id="L372">            assertThatThrownBy(() -&gt; sudoku.helper(board, row, col)</span>
+<span class="fc" id="L373">            ).isInstanceOf(NullPointerException.class);</span>
+<span class="fc" id="L374">        }</span>
+        static Stream&lt;Arguments&gt; testCasesNullPointerExceptionHelper() {
+<span class="fc" id="L376">            return Stream.of(</span>
+<span class="fc" id="L377">                    of(null, 4, 8)); // T3</span>
+        }
+
+        // Helper Method Test Correct Result
+        @ParameterizedTest
+        @Order(4)
+        @DisplayName(&quot;Helper Method Test: Devise Test Cases&quot;)
+        @MethodSource(&quot;testCasesReturnCorrectResultHelper&quot;)
+        void shouldReturnCorrectResultHelper(char[][] board, int row, int col, boolean expected) {
+<span class="fc" id="L386">            assertThat(sudoku.helper(board, row, col)).isEqualTo(expected);</span>
+<span class="fc" id="L387">        }</span>
+        static Stream&lt;Arguments&gt; testCasesReturnCorrectResultHelper() {
+
+<span class="fc" id="L390">            char[][] emptyBoard = new char[9][9];</span>
+
+<span class="fc" id="L392">            char[][] solvableBoard = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+<span class="fc" id="L403">            return Stream.of(</span>
+<span class="fc" id="L404">                    of(emptyBoard, 7, 6, true), // T4</span>
+<span class="fc" id="L405">                    of(solvableBoard, 5, 3, true)); // T22</span>
+        }
+
+        // Helper Method Test ArrayIndexOutOfBoundsException
+        @ParameterizedTest
+        @Order(5)
+        @DisplayName(&quot;Helper Method Test: ArrayIndexOutOfBoundsException&quot;)
+        @MethodSource(&quot;testCasesArrayIndexOutOfBoundsExceptionHelper&quot;)
+        void shouldThrowArrayIndexOutOfBoundsExceptionHelper(char[][] board, int row, int col) {
+<span class="pc" id="L414">            assertThatThrownBy(() -&gt; sudoku.helper(board, row, col)</span>
+<span class="fc" id="L415">            ).isInstanceOf(ArrayIndexOutOfBoundsException.class);</span>
+<span class="fc" id="L416">        }</span>
+        static Stream&lt;Arguments&gt; testCasesArrayIndexOutOfBoundsExceptionHelper() {
+
+<span class="fc" id="L419">            char[][] solvableBoard = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+<span class="fc" id="L430">            return Stream.of(</span>
+<span class="fc" id="L431">                    of(solvableBoard, 10, 15), // T19</span>
+<span class="fc" id="L432">                    of(solvableBoard, 3, 20), // T20</span>
+<span class="fc" id="L433">                    of(solvableBoard, 13, 6)); // T21</span>
+        }
+
+        // SolveSudoku Method Test NullPointerException
+        @Test
+        @Order(6)
+        @DisplayName(&quot;SolveSudoku Method Test: NullPointer&quot;)
+        void shouldThrowNullPointerExceptionSolveSudoku() {
+<span class="pc" id="L441">            assertThatThrownBy(() -&gt; sudoku.solvesudoku(null)</span>
+<span class="fc" id="L442">            ).isInstanceOf(NullPointerException.class); // T5</span>
+<span class="fc" id="L443">        }</span>
+
+        // SolveSudoku Method Test DoesNotThrowException
+        @Test
+        @Order(7)
+        @DisplayName(&quot;SolveSudoku Method Test: Does Not Throw Exception&quot;)
+        void shouldDoesNotThrowExceptionSolveSudoku() {
+<span class="fc" id="L450">            assertDoesNotThrow(() -&gt; sudoku.solvesudoku(new char[9][9])); // T6</span>
+<span class="fc" id="L451">        }</span>
+    }
+
+
+    @Nested
+    @DisplayName(&quot;Suite Test Creativity&quot;)
+<span class="fc" id="L457">    class SuiteTestCreativity {</span>
+
+        @ParameterizedTest
+        @DisplayName(&quot;isSafe Method Test: Special Characters Testing&quot;)
+        @MethodSource(&quot;specialCharactersTestingIsSafe&quot;)
+        void specialCharactersTestingIsSafe(char[][] board, int row, int col, int num, boolean expected) {
+<span class="fc" id="L463">            assertThat(sudoku.isSafe(board, row, col, num)).isEqualTo(expected);</span>
+<span class="fc" id="L464">        }</span>
+        static Stream&lt;Arguments&gt; specialCharactersTestingIsSafe() {
+
+<span class="fc" id="L467">            char[][] specialBoard = {</span>
+                    {'5', '3', '*', '.', '7', '@', '#', '!', '&amp;'},
+                    {'6', '+', '-', '1', '9', '5', '*', '%', '_'},
+                    {'#', '9', '8', '(', ')', '^', '!', '6', '.'},
+                    {'8', '=', '~', '`', '6', ';', ':', '?', '3'},
+                    {'4', ',', '[', '8', '}', '3', ']', '&gt;', '1'},
+                    {'7', '{', '}', '/', '2', '|', '&lt;', '&gt;', '6'},
+                    {'&amp;', '6', '|', '#', '&lt;', '$', '2', '8', '!'},
+                    {'#', '!', '@', '4', '1', '9', '+', '&amp;', '5'},
+                    {'*', '%', '_', ';', '8', '&gt;', ',', '7', '9'}
+            };
+<span class="fc" id="L478">            return Stream.of(</span>
+<span class="fc" id="L479">                    of(specialBoard, 0, 2, 4, true), // T24</span>
+<span class="fc" id="L480">                    of(specialBoard, 3, 5, 8, false), // T25</span>
+<span class="fc" id="L481">                    of(specialBoard, 5, 1, 32, true), // T26</span>
+<span class="fc" id="L482">                    of(specialBoard, 7, 8, 25, true)); // T27</span>
+        }
+
+    }
+
+    @Nested
+    @TestMethodOrder(OrderAnnotation.class)
+    @DisplayName(&quot;Check Code Coverage Test&quot;)
+<span class="fc" id="L490">    class checkCodeCoverageTest {</span>
+
+        // Extra isSafe Method Test
+        @ParameterizedTest
+        @Order(1)
+        @DisplayName(&quot;isSafe Method Test: Check Code Coverage Test&quot;)
+        @MethodSource(&quot;generatorIsSafe&quot;)
+        void checkTestSudokuIsSafe(char[][] board, int row, int col, int num, boolean expected) {
+<span class="fc" id="L498">            assertThat(sudoku.isSafe(board, row, col, num)).isEqualTo(expected);</span>
+<span class="fc" id="L499">        }</span>
+        static Stream&lt;Arguments&gt; generatorIsSafe() {
+
+<span class="fc" id="L502">            char[][] emptyBoard = new char[9][9];</span>
+
+<span class="fc" id="L504">            char[][] solvableBoard = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+<span class="fc" id="L515">            return Stream.of(</span>
+<span class="fc" id="L516">                    of(emptyBoard,10, 5, 1, false), // CC1</span>
+<span class="fc" id="L517">                    of(emptyBoard, 3, 11, 2, false), // CC2</span>
+<span class="fc" id="L518">                    of(solvableBoard, 3, 0, 8, false), // CC3</span>
+<span class="fc" id="L519">                    of(solvableBoard, 0, 3, 3, false), // CC4</span>
+<span class="fc" id="L520">                    of(solvableBoard, 3, 4, 6, false)); // CC5</span>
+        }
+
+        // Extra Helper Method Test
+        @ParameterizedTest
+        @Order(2)
+        @DisplayName(&quot;Helper Method Test: Check Code Coverage Test&quot;)
+        @MethodSource(&quot;generatorHelper&quot;)
+        void checkTestSudokuHelper(char[][] board, int row, int col, boolean expected) {
+<span class="fc" id="L529">            assertThat(sudoku.helper(board, row, col)).isEqualTo(expected);</span>
+<span class="fc" id="L530">        }</span>
+        static Stream&lt;Arguments&gt; generatorHelper() {
+
+<span class="fc" id="L533">            char[][] emptyBoard = new char[9][9];</span>
+
+<span class="fc" id="L535">            char[][] solvableBoard = {</span>
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+
+<span class="fc" id="L547">            return Stream.of(</span>
+<span class="fc" id="L548">                    of(emptyBoard,9, 2, true), // CC6</span>
+<span class="fc" id="L549">                    of(solvableBoard, 6, 6, true), // CC7</span>
+<span class="fc" id="L550">                    of(solvableBoard, 0, 2, true)); // CC8</span>
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
